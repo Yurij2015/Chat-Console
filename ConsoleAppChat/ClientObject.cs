@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Text;
 
 namespace ConsoleChat
 {
     public class ClientObject
     {
-
         protected internal string Id { get; private set; }
         protected internal NetworkStream Stream { get; private set; }
         string userName;
         TcpClient client;
-        ServerObject server;
+        ServerObject server; // объект сервера
 
         public ClientObject(TcpClient tcpClient, ServerObject serverObject)
         {
@@ -33,7 +29,7 @@ namespace ConsoleChat
                 string message = GetMessage();
                 userName = message;
 
-                message = userName + " вошел в чат";
+                message = "Пользователь \"" + userName + "\" вошел в чат";
                 // посылаем сообщение о входе в чат всем подключенным пользователям
                 server.BroadcastMessage(message, this.Id);
                 Console.WriteLine(message);
@@ -49,7 +45,7 @@ namespace ConsoleChat
                     }
                     catch
                     {
-                        message = String.Format("{0}: покинул чат", userName);
+                        message = String.Format("Пользователь {0}: покинул чат", userName);
                         Console.WriteLine(message);
                         server.BroadcastMessage(message, this.Id);
                         break;
@@ -92,6 +88,5 @@ namespace ConsoleChat
             if (client != null)
                 client.Close();
         }
-
     }
 }
